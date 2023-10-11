@@ -44,6 +44,24 @@ function uuHeaders()
 	return $uuHeaders;
 }
 
+function uuQueryArgs()
+{
+	$obj = uuArrayToObject($_GET);
+	$uuQuery = new stdClass();
+
+	$fields = get_object_vars($obj);
+	$fieldNames = array_keys($fields);
+
+	foreach ($fieldNames as $field)
+	{
+		error_log("Field: $field");
+
+		$uuQuery->$field = $obj->$field;
+	}
+
+	return $uuQuery;
+}
+
 function uuGetFromArray($arr, $key)
 {
 	if ($arr && $key && isset($arr[$key]))
@@ -169,7 +187,37 @@ function uuSaveFile($fileInfo, $localPath)
 	return false;
 }
 
+function uuGetHttpMethod()
+{
+	return $_SERVER['REQUEST_METHOD'];
+}
 
+function uuIsGet()
+{
+	return (uuGetHttpMethod() == 'GET');
+}
+
+function uuIsPost()
+{
+	return (uuGetHttpMethod() == 'POST');
+}
+
+function uuIsPut()
+{
+	return (uuGetHttpMethod() == 'PUT');
+}
+
+function uuIsDelete()
+{
+	return (uuGetHttpMethod() == 'DELETE');
+}
+
+function uuIsPatch()
+{
+	return (uuGetHttpMethod() == 'PATCH');
+}
+	
+	
 // LOGGING
 
 function uuDebugLog($msg)
