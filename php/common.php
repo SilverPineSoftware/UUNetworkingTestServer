@@ -63,14 +63,20 @@ function uuGetHeader($key)
 
 function uuRequireQueryStringField($key)
 {
-	$file = uuGetFromArray($_GET, $key);
-	if ($file == NULL)
+	$val = uuGetQueryStringField($key);
+	if ($val == NULL)
 	{
 		uuExit(400, 'Expected query string argument: ' . $key);
 	}
 	
-	return $file;
+	return $val;
 }
+
+function uuGetQueryStringField($key)
+{
+	return uuGetFromArray($_GET, $key);
+}
+
 
 function uuGetFileField($key)
 {
