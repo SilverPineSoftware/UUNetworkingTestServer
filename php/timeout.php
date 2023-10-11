@@ -1,7 +1,8 @@
 <?php
+require_once('common.php');
 header('Content-type: application/json');
 
-$seconds = $_GET['timeout'];
+$seconds = uuGetHeader('timeout');
 sleep($seconds);
 
 $result = new stdClass();

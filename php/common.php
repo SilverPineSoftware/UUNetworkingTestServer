@@ -97,6 +97,35 @@ function uuCheckForStatusCodeHeader()
 	}
 }
 
+function uuCheckForReturnCountHeader($body)
+{
+	$uuReturnObjectCount = uuGetHeader('HTTP_UU_RETURN_OBJECT_COUNT');
+	if ($uuReturnObjectCount != NULL)
+	{
+		$count = intval($uuReturnObjectCount);
+	
+		if ($count > 1)
+		{
+			$obj = $body;
+			$arr = array();
+		
+			for ($i = 0; $i < $count; $i++)
+			{
+				$arr[] = $obj;
+			}
+		
+			$body = $arr;
+		}
+	}
+	
+	return $body;
+}
+
+function uuGetPostBody()
+{
+	return file_get_contents('php://input');
+}
+
 function uuExit($httpStatusCode, $message)
 {
 	http_response_code($httpStatusCode);
