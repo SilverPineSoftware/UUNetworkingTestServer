@@ -9,15 +9,15 @@ class TestController extends ApiController
 	{
 		if (uuIsGet())
 		{
-			$this->singleGet();
+			$this->single_GET();
 		}
 		else if (uuIsPost())
 		{
-			$this->singlePost();
+			$this->single_POST();
 		}
 		else if (uuIsPut())
 		{
-			$this->singlePost();
+			$this->single_POST();
 		}
 		else
 		{
