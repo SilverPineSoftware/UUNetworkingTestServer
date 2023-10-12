@@ -7,7 +7,26 @@ class TestController extends ApiController
 {
 	function single()
 	{
+		if (uuIsGet())
+		{
+			$this->singleGet();
+		}
+		else if (uuIsPost())
+		{
+			$this->singlePost();
+		}
+		else if (uuIsPut())
+		{
+			$this->singlePost();
+		}
+		else
+		{
+			$this->setResult(415, NULL);
+		}
+	}
 	
+	function single_GET()
+	{
 		$body = new TestModel();
 		$body->id = "12345";
 		$body->name = "IntegrationTest";
@@ -31,6 +50,13 @@ class TestController extends ApiController
 			$body->data = $data;
 		}
 		
+		$this->setResult(200, $body);
+	}
+	
+	function single_POST()
+	{
+		$incoming_post = uuGetPostBody();
+		$body = json_decode($incoming_post);
 		$this->setResult(200, $body);
 	}
 	
