@@ -1,3 +1,5 @@
 /php/PHPTestServer.bbprojectd/project.lockfile
 *.bbprojectsettings
 /php/PHPTestServer.bbprojectd/ryandevore.bbprojectsettings
+.DS_Store
+/php/PHPTestServer.bbprojectd/Chat Worksheet.bbaiworksheet
