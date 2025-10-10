@@ -1,5 +1,4 @@
 <?php
-
 define('UU_FILE_FOLDER', '/var/www-uu-upload/');
 
 function uuArrayToObject($arr)
@@ -281,6 +280,4 @@ function uuVarDumpToString($obj)
 	return $dump;
 }
 
-
 ?>
-
