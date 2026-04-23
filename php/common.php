@@ -314,6 +314,56 @@ function uuDebugLog($msg)
 	error_log($msg);
 }
 
+/**
+ * Keys whose values must never appear in logs (Lambda injects AWS credentials into $_SERVER).
+ */
+function uuShouldRedactServerKey($key)
+{
+	static $exact = array(
+		'AWS_ACCESS_KEY_ID',
+		'AWS_SECRET_ACCESS_KEY',
+		'AWS_SESSION_TOKEN',
+		'AWS_SECURITY_TOKEN',
+		'AWS_LAMBDA_METADATA_TOKEN',
+		'AWS_CONTAINER_CREDENTIALS_RELATIVE_URI',
+		'AWS_CONTAINER_AUTHORIZATION_TOKEN',
+		'PHP_AUTH_PW',
+	);
+	if (in_array($key, $exact, true))
+	{
+		return true;
+	}
+	$u = strtoupper((string)$key);
+	if (strpos($u, 'AUTHORIZATION') !== false)
+	{
+		return true;
+	}
+	if ($key === 'HTTP_COOKIE' || $key === 'HTTP_SET_COOKIE')
+	{
+		return true;
+	}
+
+	return false;
+}
+
+function uuSanitizeServerForLogging(array $server)
+{
+	$out = array();
+	foreach ($server as $k => $v)
+	{
+		if (uuShouldRedactServerKey($k))
+		{
+			$out[$k] = '[REDACTED]';
+		}
+		else
+		{
+			$out[$k] = $v;
+		}
+	}
+
+	return $out;
+}
+
 function uuLogArray($array, $name)
 {
 	if ($array)
@@ -343,7 +393,7 @@ function uuLogArray($array, $name)
 
 function uuLogServerVars()
 {
-	uuLogArray($_SERVER, '_SERVER');
+	uuLogArray(uuSanitizeServerForLogging($_SERVER), '_SERVER');
 }
 
 function uuLogGETVars()
