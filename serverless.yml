@@ -32,6 +32,7 @@ functions:
 package:
   patterns:
     - '!docs/**'
+    - '!static-public/**'
     - '!scripts/**'
     - '!**/.DS_Store'
     - '!.git/**'

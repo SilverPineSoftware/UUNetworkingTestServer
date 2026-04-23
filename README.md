@@ -16,3 +16,7 @@ npx serverless@3 deploy
 ```
 
 Or `./scripts/deploy_lambda.sh` (defaults: stage `prod`, region `us-west-2`). See `docs/bref-serverless-from-scratch.md` for details.
+
+## Static files on S3 (zips, `.well-known`)
+
+Put assets under **`static-public/`**, create a bucket once with **`scripts/setup_s3_static_bucket.sh`**, then **`scripts/sync_static_to_s3.sh`**. Serve them via CloudFront (OAC), not Lambda — see **`docs/s3-static-hosting.md`**.

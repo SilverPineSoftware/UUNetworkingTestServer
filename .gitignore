@@ -5,4 +5,9 @@
 *.bbprojectsettings
 /php/PHPTestServer.bbprojectd/ryandevore.bbprojectsettings
 .DS_Store
+
+# Large binaries for S3 sync (keep locally; do not commit)
+static-public/**/*.zip
+!static-public/downloads/zip_100.zip
 /php/PHPTestServer.bbprojectd/Chat Worksheet.bbaiworksheet
+*.zip
