@@ -1,6 +1,9 @@
 <?php
-ob_start("ob_gzhandler");
 require_once('common.php');
+if (uuPhpOutputCompressionSafe())
+{
+	ob_start("ob_gzhandler");
+}
 header('Content-type: application/json');
 
 $incoming_post = uuGetPostBody();
@@ -16,7 +19,7 @@ $body = json_decode($incoming_post);
 $correlationId = $body->correlationId;
 
 $uploadFolder = UU_FILE_FOLDER;
-$fileName = "${correlationId}.json";
+$fileName = "{$correlationId}.json";
 $fullFileName = $uploadFolder . $fileName;
 
 file_put_contents($fullFileName, $incoming_post);

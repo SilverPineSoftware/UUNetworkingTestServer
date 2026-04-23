@@ -305,8 +305,17 @@ function uuIsPatch()
 {
 	return (uuGetHttpMethod() == 'PATCH');
 }
-	
-	
+
+/**
+ * Whether PHP may gzip/deflate the response body. Disabled on Lambda: Bref wraps HTTP in JSON and
+ * binary compressed output fails encoding (see https://bref.sh/docs/runtimes/http.html#binary-requests-and-responses).
+ */
+function uuPhpOutputCompressionSafe()
+{
+	return getenv('AWS_LAMBDA_FUNCTION_NAME') === false || getenv('AWS_LAMBDA_FUNCTION_NAME') === '';
+}
+
+
 // LOGGING
 
 function uuDebugLog($msg)

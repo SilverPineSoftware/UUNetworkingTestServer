@@ -7,14 +7,15 @@ uuLogGETVars();
 uuLogPOSTVars();
 
 $acceptEncoding = uuGetHeader('HTTP_ACCEPT_ENCODING');
+$compress = uuPhpOutputCompressionSafe();
 
-if ($acceptEncoding == 'gzip')
+if ($compress && $acceptEncoding == 'gzip')
 {
 	error_log('Using GZip');
 	ob_start("ob_gzhandler");
 	header('Vary: Accept-Encoding');
 }
-else if ($acceptEncoding == 'deflate')
+else if ($compress && $acceptEncoding == 'deflate')
 {
 	error_log('Using Deflate');
 	header('Vary: Accept-Encoding');
@@ -53,7 +54,7 @@ if ($data != NULL)
 	$body->data = $data;
 }
 
-if ($acceptEncoding == 'deflate')
+if ($compress && $acceptEncoding == 'deflate')
 {
 	echo gzcompress(json_encode($body), 6);
 }
