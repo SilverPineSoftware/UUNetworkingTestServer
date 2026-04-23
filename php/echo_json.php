@@ -1,5 +1,4 @@
 <?php
-
 require_once('common.php');
 header('Content-type: application/json');
 

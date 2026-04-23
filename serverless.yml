@@ -1,0 +1,37 @@
+service: uu-networking-test-server
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: provided.al2
+  region: us-west-2
+  stage: prod
+  environment:
+    APP_STAGE: ${opt:stage, self:provider.stage}
+
+plugins:
+  - ./vendor/bref/bref
+
+functions:
+  web:
+    description: UUNetworkingTestServer PHP (Bref PHP-FPM)
+    handler: php/index.php
+    timeout: 29
+    memorySize: 512
+    layers:
+      - ${bref:layer.php-82-fpm}
+    events:
+      - httpApi:
+          path: /
+          method: '*'
+      - httpApi:
+          path: /{proxy+}
+          method: '*'
+
+package:
+  patterns:
+    - '!docs/**'
+    - '!scripts/**'
+    - '!**/.DS_Store'
+    - '!.git/**'

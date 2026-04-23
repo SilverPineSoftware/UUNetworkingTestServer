@@ -1,3 +1,6 @@
+/vendor/
+/.serverless/
+
 /php/PHPTestServer.bbprojectd/project.lockfile
 *.bbprojectsettings
 /php/PHPTestServer.bbprojectd/ryandevore.bbprojectsettings

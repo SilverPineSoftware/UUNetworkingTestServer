@@ -42,6 +42,10 @@ class EchoController extends ApiController
 	private function handlePost()
 	{
 	}
+
+	private function handlePut()
+	{
+	}
 }
 
 

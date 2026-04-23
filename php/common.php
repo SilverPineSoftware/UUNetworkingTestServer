@@ -1,5 +1,13 @@
 <?php
-define('UU_FILE_FOLDER', '/var/www-uu-upload/');
+$uuUploadEnv = getenv('UU_FILE_FOLDER');
+$uuUploadDefault = getenv('AWS_LAMBDA_FUNCTION_NAME')
+	? '/tmp/uu-upload/'
+	: '/var/www-uu-upload/';
+define(
+	'UU_FILE_FOLDER',
+	($uuUploadEnv !== false && $uuUploadEnv !== '') ? $uuUploadEnv : $uuUploadDefault
+);
+@mkdir(UU_FILE_FOLDER, 0777, true);
 
 function uuArrayToObject($arr)
 {
@@ -92,6 +100,88 @@ function uuRequireQueryStringField($key)
 function uuGetQueryStringField($key)
 {
 	return uuGetFromArray($_GET, $key);
+}
+
+/** Strip Serverless/API Gateway stage prefix from URL path (e.g. prod/echo/json → echo/json). */
+function uuStripStageFromPath($path)
+{
+	$path = trim((string)$path, '/');
+	$stage = getenv('APP_STAGE');
+	if ($stage !== false && $stage !== '')
+	{
+		$prefix = $stage . '/';
+		if (strpos($path, $prefix) === 0)
+		{
+			return substr($path, strlen($prefix));
+		}
+		if ($path === $stage)
+		{
+			return '';
+		}
+	}
+
+	return $path;
+}
+
+/**
+ * Routing action in the form controller/method (Apache rewrite used ?do=…).
+ * Under Lambda, derive the same string from REQUEST_URI when do is absent.
+ */
+function uuRoutingAction()
+{
+	$do = uuGetQueryStringField('do');
+	if ($do !== NULL && $do !== '')
+	{
+		return $do;
+	}
+	$uri = $_SERVER['REQUEST_URI'] ?? '/';
+	$path = parse_url($uri, PHP_URL_PATH);
+	$path = uuStripStageFromPath((string)$path);
+	if ($path === '' || $path === 'index.php')
+	{
+		return NULL;
+	}
+
+	return $path;
+}
+
+/**
+ * Serve legacy standalone scripts (echo_json.php, get_object.php, …) like Apache did for real .php files.
+ */
+function uuDispatchStandalonePhp($baseDir)
+{
+	$uri = $_SERVER['REQUEST_URI'] ?? '/';
+	$path = parse_url($uri, PHP_URL_PATH);
+	$path = uuStripStageFromPath((string)$path);
+	if ($path === '' || $path === 'index.php')
+	{
+		return false;
+	}
+	if (!str_ends_with($path, '.php'))
+	{
+		return false;
+	}
+	$baseReal = realpath($baseDir);
+	if ($baseReal === false)
+	{
+		return false;
+	}
+	$normalized = str_replace('/', DIRECTORY_SEPARATOR, $path);
+	$candidate = $baseReal . DIRECTORY_SEPARATOR . $normalized;
+	$resolved = realpath($candidate);
+	$basePrefix = $baseReal . DIRECTORY_SEPARATOR;
+	if ($resolved === false
+		|| ($resolved !== $baseReal && strpos($resolved, $basePrefix) !== 0))
+	{
+		return false;
+	}
+	if (!is_file($resolved))
+	{
+		return false;
+	}
+	require $resolved;
+
+	return true;
 }
 
 
