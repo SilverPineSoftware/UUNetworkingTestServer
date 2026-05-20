@@ -7,8 +7,12 @@ provider:
   runtime: provided.al2
   region: us-west-2
   stage: prod
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
   environment:
     APP_STAGE: ${opt:stage, self:provider.stage}
+    BREF_BINARY_RESPONSES: '1'
 
 plugins:
   - ./vendor/bref/bref

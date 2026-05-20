@@ -223,6 +223,15 @@ Declare extensions in `composer.json` (e.g. `"ext-curl": "*"`) so Composer fails
 
 Use `package.patterns` in `serverless.yml` to exclude `docs/`, tests, dev assets, and anything not needed at runtime.
 
+### Multipart uploads (`form.php`) or binary downloads (`download.php`)
+
+`serverless.yml` must enable Bref binary HTTP (see [binary requests and responses](https://bref.sh/docs/runtimes/http.html#binary-requests-and-responses)):
+
+- `provider.apiGateway.binaryMediaTypes: ['*/*']`
+- `provider.environment.BREF_BINARY_RESPONSES: '1'`
+
+Without this, uploads may leave `$_FILES` empty and downloads that `readfile()` JPEGs or other binary data fail with *“Lambda response cannot be encoded to JSON”* / *Malformed UTF-8*. API Gateway limits uploads to ~6MB and downloads to ~4.5MB; larger assets belong in S3 (see `s3-static-hosting.md`).
+
 ---
 
 ## Optional: custom domain / CloudFront
