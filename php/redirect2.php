@@ -1,4 +1,4 @@
 <?php
-header('Location: https://'.$_SERVER['HTTP_HOST']. '/uu/redirect.php');
+header('Location: https://'.$_SERVER['HTTP_HOST']. '/redirect.php');
 die;
 ?>
