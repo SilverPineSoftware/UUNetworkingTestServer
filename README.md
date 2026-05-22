@@ -3,9 +3,13 @@ A simple PHP REST server for integration tests with UU networking components.
 
 ## Local PHP server
 ```bash
-php -S 127.0.0.1:8080 -t php
+./scripts/start_local.sh
+./scripts/stop_local.sh   # stop background or orphaned server
 ```
-Use `http://127.0.0.1:8080/` (root returns a short health line). REST routes match Apache-style paths, e.g. `http://127.0.0.1:8080/echo/json`. Query form `?do=echo/json` still works.
+
+Or manually: `php -S 127.0.0.1:8080 -t php php/index.php` (uploads go to `/tmp/uu-upload` unless `UU_FILE_FOLDER` is set).
+
+Use `http://127.0.0.1:8080/` (root returns a short health line). REST routes match Apache-style paths, e.g. `http://127.0.0.1:8080/echo/json`. Query form `?do=echo/json` still works. For iOS Simulator tests, set `test_server_api_host` in `UUNetworkingTestConfig.plist` to `http://127.0.0.1:8080`.
 
 ## Deploy to AWS (Bref + Serverless Framework)
 Requires AWS CLI credentials, Composer, and Node (`npx`).
