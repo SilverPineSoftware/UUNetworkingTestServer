@@ -8,8 +8,6 @@ This project serves dynamic PHP on **API Gateway HTTP API → Lambda (Bref PHP-F
 uu.spsw.io  →  API Gateway custom domain  →  HTTP API  →  Lambda (Bref)
 ```
 
-Static zips / `.well-known` on S3 are a **separate** concern (`docs/s3-static-hosting.md`); they are not required for PHP API integration tests.
-
 ## Prerequisites
 
 - Successful deploy (`./scripts/deploy_lambda.sh`) and a working **invoke URL** (`https://xxxx.execute-api.us-west-2.amazonaws.com`).
@@ -100,4 +98,3 @@ Confirm with `dig @8.8.8.8 uu.spsw.io` before blaming local cache.
 ## Related docs
 
 - `bref-serverless-from-scratch.md` — deploy, binary HTTP, Lambda limits
-- `s3-static-hosting.md` — optional static assets (separate from this API hostname)
