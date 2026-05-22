@@ -204,10 +204,15 @@ function uuRequireFileField($key)
 function uuCheckForStatusCodeHeader()
 {
 	$uuStatusCode = uuGetHeader('HTTP_UU_STATUS_CODE');
-	if ($uuStatusCode != NULL)
+	
+	if ($uuStatusCode == NULL)
 	{
-		http_response_code(intval($uuStatusCode));
+		$uuStatusCode = 200;
 	}
+
+	http_response_code(intval($uuStatusCode));
+
+	return $uuStatusCode;
 }
 
 function uuCheckForReturnCountHeader($body)

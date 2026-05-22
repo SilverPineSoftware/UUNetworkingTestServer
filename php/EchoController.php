@@ -27,12 +27,7 @@ class EchoController extends ApiController
 	
 	private function handleGet()
 	{
-		$httpCode = 200;
-		$uuStatusCode = uuGetHeader('HTTP_UU_STATUS_CODE');
-		if ($uuStatusCode != NULL)
-		{
-			$httpCode = intval($uuStatusCode);
-		}
+		$httpCode = uuCheckForStatusCodeHeader();
 	
 		$body = $this->queryArgs;
 		$body = uuCheckForReturnCountHeader($body);
@@ -41,10 +36,22 @@ class EchoController extends ApiController
 	
 	private function handlePost()
 	{
+		$httpCode = uuCheckForStatusCodeHeader();
+
+		$incoming_post = uuGetPostBody();
+		$body = json_decode($incoming_post);
+		$body = uuCheckForReturnCountHeader($body);
+		$this->setResult($httpCode, $body);
 	}
 
 	private function handlePut()
 	{
+		$httpCode = uuCheckForStatusCodeHeader();
+
+		$incoming_post = uuGetPostBody();
+		$body = json_decode($incoming_post);
+		$body = uuCheckForReturnCountHeader($body);
+		$this->setResult($httpCode, $body);
 	}
 }
 
