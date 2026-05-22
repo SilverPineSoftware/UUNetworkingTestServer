@@ -234,9 +234,9 @@ Without this, uploads may leave `$_FILES` empty and downloads that `readfile()` 
 
 ---
 
-## Optional: custom domain / CloudFront
+## Custom domain (`uu.spsw.io`)
 
-HTTPS custom domains usually use **API Gateway custom domain**, **ACM certificate**, and often **CloudFront** in front. That is orthogonal to Bref; the API’s `execute-api` URL is enough for integration testing.
+Production uses an **API Gateway HTTP API custom domain** (regional cert in **us-west-2**), not a manual CloudFront distribution in front of the PHP API. See **`docs/custom-domain-api-gateway.md`**. The raw **`execute-api`** URL is enough for integration testing before DNS is cut over.
 
 ---
 
