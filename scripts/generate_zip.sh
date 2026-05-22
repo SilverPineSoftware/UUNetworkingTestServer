@@ -12,14 +12,19 @@ set -euo pipefail
 #
 # Optional:
 #   OUTPUT_DIR=/path/to/dir ./scripts/generate_zip.sh 10 512
+#   UU_TEST_SERVER_HOST=https://uu.spsw.io ./scripts/generate_zip.sh 100 1024
+#   UU_TEST_SERVER_HOST=http://127.0.0.1:8080  (local start_local.sh)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/files}"
+OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}}"
+UU_TEST_SERVER_HOST="${UU_TEST_SERVER_HOST:-https://uu.spsw.io}"
+UU_TEST_SERVER_HOST="${UU_TEST_SERVER_HOST%/}"
 
 usage() {
 	echo "Usage: $0 <file_count> <word_count>" >&2
-	echo "  Creates zip_{file_count}_{word_count}.zip with random lorem ipsum text files." >&2
+	echo "  Creates zip_{file_count}_{word_count}.zip, then POSTs it to form.php (uu_file)." >&2
+	echo "  Set UU_TEST_SERVER_HOST (default: https://uu.spsw.io)." >&2
 	exit 1
 }
 
@@ -38,7 +43,7 @@ if [[ "${FILE_COUNT}" -lt 1 ]] || [[ "${WORD_COUNT}" -lt 1 ]]; then
 	exit 1
 fi
 
-for cmd in zip python3; do
+for cmd in zip python3 curl; do
 	if ! command -v "${cmd}" >/dev/null 2>&1; then
 		echo "ERROR: ${cmd} not found." >&2
 		exit 2
@@ -93,3 +98,20 @@ rm -f "${ZIP_PATH}"
 )
 
 echo "Done: ${ZIP_PATH} ($(du -h "${ZIP_PATH}" | awk '{print $1}'))"
+
+ZIP_FILENAME="${ZIP_BASENAME}.zip"
+FORM_URL="${UU_TEST_SERVER_HOST}/form.php"
+
+echo "Uploading ${ZIP_FILENAME} → ${FORM_URL}"
+RESPONSE="$(curl -fsS -X POST "${FORM_URL}" -F "uu_file=@${ZIP_PATH};filename=${ZIP_FILENAME}")"
+echo "Server: ${RESPONSE}"
+
+if [[ "${RESPONSE}" != *"Upload finished, result: 1"* && "${RESPONSE}" != *"Upload finished, result: true"* ]]; then
+	echo "ERROR: upload did not report success." >&2
+	exit 1
+fi
+
+rm -f "${ZIP_PATH}"
+rm -rf "${WORK_DIR}"
+
+echo "Done: ${ZIP_FILENAME} uploaded to ${FORM_URL}"
