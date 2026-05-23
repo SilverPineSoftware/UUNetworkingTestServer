@@ -65,3 +65,7 @@ Details and troubleshooting: **`docs/custom-domain-api-gateway.md`**.
 iOS / integration tests: `test_server_api_host` = `https://uu.spsw.io`.
 
 **Note:** API Gateway may still add CloudFront-related response headers on some custom-domain configurations; that is AWS-managed, not your old manual CloudFront setup. If `POST /form.php` fails with HTML “Request blocked”, check WAF on any distribution still associated with the hostname, or test against the raw `execute-api` URL to isolate Lambda vs edge.
+
+## Static files on S3 (optional)
+
+Large static assets (zips, `.well-known`) live under **`static-public/`** and sync to S3 — not served by Lambda. See **`docs/s3-static-hosting.md`** when you wire up a separate hostname or CloudFront origin for static content.
