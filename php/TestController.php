@@ -21,7 +21,7 @@ class TestController extends ApiController
 		}
 		else
 		{
-			$this->setResult(415, NULL);
+			$this->setJsonResult(415, NULL);
 		}
 	}
 	
@@ -50,14 +50,14 @@ class TestController extends ApiController
 			$body->data = $data;
 		}
 		
-		$this->setResult(200, $body);
+		$this->setJsonResult(200, $body);
 	}
 	
 	function single_POST()
 	{
 		$incoming_post = uuGetPostBody();
 		$body = json_decode($incoming_post);
-		$this->setResult(200, $body);
+		$this->setJsonResult(200, $body);
 	}
 	
 	function multiple()
@@ -93,7 +93,12 @@ class TestController extends ApiController
 			$result[] = $body;
 		}
 		
-		$this->setResult(200, $result);
+		$this->setJsonResult(200, $result);
+	}
+
+	function empty()
+	{
+		$this->setResult(200, NULL, NULL);
 	}
 }
 

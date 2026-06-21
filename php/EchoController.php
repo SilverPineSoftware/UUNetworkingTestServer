@@ -21,7 +21,7 @@ class EchoController extends ApiController
 		}
 		else
 		{
-			$this->setResult(415, NULL);
+			$this->setJsonResult(415, NULL);
 		}
 	}
 	
@@ -31,7 +31,7 @@ class EchoController extends ApiController
 	
 		$body = $this->queryArgs;
 		$body = uuCheckForReturnCountHeader($body);
-		$this->setResult($httpCode, $body);
+		$this->setJsonResult($httpCode, $body);
 	}
 	
 	private function handlePost()
@@ -41,7 +41,7 @@ class EchoController extends ApiController
 		$incoming_post = uuGetPostBody();
 		$body = json_decode($incoming_post);
 		$body = uuCheckForReturnCountHeader($body);
-		$this->setResult($httpCode, $body);
+		$this->setJsonResult($httpCode, $body);
 	}
 
 	private function handlePut()
@@ -51,7 +51,7 @@ class EchoController extends ApiController
 		$incoming_post = uuGetPostBody();
 		$body = json_decode($incoming_post);
 		$body = uuCheckForReturnCountHeader($body);
-		$this->setResult($httpCode, $body);
+		$this->setJsonResult($httpCode, $body);
 	}
 }
 
