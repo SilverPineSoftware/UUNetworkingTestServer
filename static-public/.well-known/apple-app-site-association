@@ -1,0 +1,17 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "SVT6H48N2C.com.silverpine.uu.networking.sample",
+                "paths": [ "/login*", "/logout*" ]
+            },
+            {
+                "appID": "SVT6H48N2C.com.silverpine.uu.networking.sample.d",
+                "paths": [ "/login*", "/logout*" ]
+            }
+        ]
+    }
+}
+
+
